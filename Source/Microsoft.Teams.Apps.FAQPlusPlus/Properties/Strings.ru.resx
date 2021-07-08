@@ -208,7 +208,7 @@
     <comment>Welcome message when bot is added to a new team.</comment>
   </data>
   <data name="CustomMessage" xml:space="preserve">
-    <value>У меня нет ответа на этот вопрос. Хотите, я запрошу специалиста?</value>
+    <value>Я не нашел для Вас ответ по данному вопросу. Просьба обратиться в ОАиИТО для получения ответа на Ваш вопрос.</value>
     <comment>Message when user asks random question to the bot.</comment>
   </data>
   <data name="QuestionAskedFactTitle" xml:space="preserve">

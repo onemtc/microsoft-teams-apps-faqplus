@@ -93,7 +93,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
                 new AdaptiveTextBlock
                 {
                     Weight = AdaptiveTextWeight.Bolder,
-                    Text = Strings.ResponseHeaderText,
+                    Text = " ", //Strings.ResponseHeaderText,
                     Wrap = true,
                     HorizontalAlignment = textAlignment,
                 },
@@ -158,21 +158,21 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
                                 Columns = new List<AdaptiveColumn>()
                                 {
                                     // This column will be for the icon.
-                                    new AdaptiveColumn
-                                    {
-                                        Width = AdaptiveColumnWidth.Auto,
-                                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Center,
-                                        Items = new List<AdaptiveElement>()
-                                        {
-                                            new AdaptiveImage
-                                            {
-                                                Url = new Uri(appBaseUri + "/content/Followupicon.png"),
-                                                PixelWidth = IconWidth,
-                                                PixelHeight = IconHeight,
-                                            },
-                                        },
-                                        Spacing = AdaptiveSpacing.Small,
-                                    },
+                                    //new AdaptiveColumn
+                                    //{
+                                    //    Width = AdaptiveColumnWidth.Auto,
+                                    //    VerticalContentAlignment = AdaptiveVerticalContentAlignment.Center,
+                                    //    Items = new List<AdaptiveElement>()
+                                    //    {
+                                    //        new AdaptiveImage
+                                    //        {
+                                    //            Url = new Uri(appBaseUri + "/content/Followupicon.png"),
+                                    //            PixelWidth = IconWidth,
+                                    //            PixelHeight = IconHeight,
+                                    //        },
+                                    //    },
+                                    //    Spacing = AdaptiveSpacing.Small,
+                                    //},
                                     new AdaptiveColumn
                                     {
                                         Width = AdaptiveColumnWidth.Stretch,
@@ -182,7 +182,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
                                             new AdaptiveTextBlock
                                             {
                                                 Wrap = true,
-                                                Text = string.Format(Strings.SelectActionItemDisplayTextFormatting, item.DisplayText?.Trim()),
+                                                Text = "👉 " + string.Format(Strings.SelectActionItemDisplayTextFormatting, item.DisplayText?.Trim()),
                                                 HorizontalAlignment = textAlignment,
                                             },
                                         },
@@ -227,21 +227,21 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
             List<AdaptiveAction> actionsList = new List<AdaptiveAction>
             {
                 // Adds the "Ask an expert" button.
-                new AdaptiveSubmitAction
-                {
-                    Title = Strings.AskAnExpertButtonText,
-                    Data = new ResponseCardPayload
-                    {
-                        MsTeams = new CardAction
-                        {
-                            Type = ActionTypes.MessageBack,
-                            DisplayText = Strings.AskAnExpertDisplayText,
-                            Text = Constants.AskAnExpert,
-                        },
-                        UserQuestion = userQuestion,
-                        KnowledgeBaseAnswer = answer,
-                    },
-                },
+                //new AdaptiveSubmitAction
+                //{
+                //    Title = Strings.AskAnExpertButtonText,
+                //    Data = new ResponseCardPayload
+                //    {
+                //        MsTeams = new CardAction
+                //        {
+                //            Type = ActionTypes.MessageBack,
+                //            DisplayText = Strings.AskAnExpertDisplayText,
+                //            Text = Constants.AskAnExpert,
+                //        },
+                //        UserQuestion = userQuestion,
+                //        KnowledgeBaseAnswer = answer,
+                //    },
+                //},
 
                 // Adds the "Share feedback" button.
                 new AdaptiveSubmitAction
