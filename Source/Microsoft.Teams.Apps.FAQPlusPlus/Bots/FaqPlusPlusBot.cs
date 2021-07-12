@@ -14,6 +14,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
     using Microsoft.ApplicationInsights.DataContracts;
     using Microsoft.Azure.CognitiveServices.Knowledge.QnAMaker.Models;
     using Microsoft.Bot.Builder;
+    using Microsoft.Bot.Builder.AI.QnA;
     using Microsoft.Bot.Builder.Teams;
     using Microsoft.Bot.Connector.Authentication;
     using Microsoft.Bot.Schema;
@@ -139,6 +140,18 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
 
             this.appBaseUri = this.options.AppBaseUri;
             this.knowledgeBaseSearchService = knowledgeBaseSearchService;
+
+
+            //var httpClient = _httpClientFactory.CreateClient();
+
+            //var qnaMaker = new QnAMaker(new QnAMakerEndpoint
+            //{
+            //    KnowledgeBaseId = _configuration["QnAKnowledgebaseId"],
+            //    EndpointKey = _configuration["QnAEndpointKey"],
+            //    Host = _configuration["QnAEndpointHostName"]
+            //},
+            //null,
+            //httpClient);
         }
 
         /// <summary>
@@ -246,9 +259,9 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
 
                 switch (activity.Conversation.ConversationType.ToLower())
                 {
-                    case ConversationTypePersonal:
-                        await this.OnMembersAddedToPersonalChatAsync(activity.MembersAdded, turnContext).ConfigureAwait(false);
-                        return;
+                    //case ConversationTypePersonal:
+                    //    await this.OnMembersAddedToPersonalChatAsync(activity.MembersAdded, turnContext).ConfigureAwait(false);
+                    //    return;
 
                     case ConversationTypeChannel:
                         await this.OnMembersAddedToTeamAsync(activity.MembersAdded, turnContext, cancellationToken).ConfigureAwait(false);
@@ -1427,9 +1440,20 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
                     payload = ((JObject)message.Value).ToObject<ResponseCardPayload>();
                 }
 
-                queryResult = await this.qnaServiceProvider.GenerateAnswerAsync(question: text, isTestKnowledgeBase: false, payload.PreviousQuestions?.Last().Id.ToString(), payload.PreviousQuestions?.Last().Questions.First()).ConfigureAwait(false);
+                queryResult = await this.qnaServiceProvider.GenerateAnswerAsync(
+                    question: text,
+                    isTestKnowledgeBase: false,
+                    payload.PreviousQuestions?.Last().Id.ToString(),
+                    payload.PreviousQuestions?.Last().Questions.First()).ConfigureAwait(false);
 
-                if (queryResult.Answers.First().Id != -1)
+                var answer = queryResult.Answers.First();
+                bool isContextOnly = answer.Context?.IsContextOnly ?? false;
+
+                if (isContextOnly && (payload.PreviousQuestions == null))
+                {
+                    await turnContext.SendActivityAsync(MessageFactory.Attachment(UnrecognizedInputCard.GetCard(text))).ConfigureAwait(false);
+                }
+                else if (answer.Id != -1)
                 {
                     await turnContext.SendActivityAsync(MessageFactory.Attachment(ResponseCard.GetCard(queryResult.Answers.First(), text, this.appBaseUri, payload))).ConfigureAwait(false);
                 }

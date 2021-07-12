@@ -53,7 +53,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
             AdaptiveCard responseCard = new AdaptiveCard(new AdaptiveSchemaVersion(1, 2))
             {
                 Body = BuildResponseCardBody(response, userQuestion, answer, appBaseUri, payload, isRichCard),
-                Actions = BuildListOfActions(userQuestion, answer),
+                //Actions = BuildListOfActions(userQuestion, answer),
             };
 
             if (!string.IsNullOrEmpty(answerModel.RedirectionUrl))
@@ -182,7 +182,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
                                             new AdaptiveTextBlock
                                             {
                                                 Wrap = true,
-                                                Text = "👉 " + string.Format(Strings.SelectActionItemDisplayTextFormatting, item.DisplayText?.Trim()),
+                                                Text = "☑ " + string.Format(Strings.SelectActionItemDisplayTextFormatting, item.DisplayText?.Trim()),
                                                 HorizontalAlignment = textAlignment,
                                             },
                                         },
