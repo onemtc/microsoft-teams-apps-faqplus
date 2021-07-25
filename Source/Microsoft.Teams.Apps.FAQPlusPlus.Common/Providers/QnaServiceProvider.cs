@@ -186,7 +186,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Common.Providers
         /// <param name="previousQnAId">Id of previous question.</param>
         /// <param name="previousUserQuery">Previous question information.</param>
         /// <returns>QnaSearchResultList result as response.</returns>
-        public async Task<QnASearchResultList> GenerateAnswerAsync(string question, bool isTestKnowledgeBase, string previousQnAId = null, string previousUserQuery = null)
+        public async Task<QnASearchResultList> GenerateAnswerAsync(string question, bool isTestKnowledgeBase, string userId = null, string previousQnAId = null, string previousUserQuery = null)
         {
             var knowledgeBaseId = await this.configurationProvider.GetSavedEntityDetailAsync(ConfigurationEntityTypes.KnowledgeBaseId).ConfigureAwait(false);
 
@@ -194,7 +194,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Common.Providers
             {
                 IsTest = isTestKnowledgeBase,
                 Question = question?.Trim(),
-                ScoreThreshold = Convert.ToDouble(this.options.ScoreThreshold, CultureInfo.InvariantCulture),
+                ScoreThreshold = Convert.ToDouble(this.options.ScoreThreshold, CultureInfo.InvariantCulture) * 100,
             };
 
             if (previousQnAId != null && previousUserQuery != null)
@@ -205,6 +205,8 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Common.Providers
                     PreviousUserQuery = previousUserQuery,
                 };
             }
+
+            queryDTO.UserId = userId;
 
             return await this.qnaMakerRuntimeClient.Runtime.GenerateAnswerAsync(knowledgeBaseId, queryDTO).ConfigureAwait(false);
         }

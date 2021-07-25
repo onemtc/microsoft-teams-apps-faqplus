@@ -5,6 +5,7 @@
 namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Globalization;
     using AdaptiveCards;
@@ -202,7 +203,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
                                     DisplayText = item.DisplayText,
                                     Text = item.DisplayText,
                                 },
-                                PreviousQuestions = previousQuestions,
+                                PreviousQuestions = new List<QnADTO> { previousQuestions.Last() },
                                 IsPrompt = true,
                             },
                         },
@@ -227,21 +228,21 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
             List<AdaptiveAction> actionsList = new List<AdaptiveAction>
             {
                 // Adds the "Ask an expert" button.
-                //new AdaptiveSubmitAction
-                //{
-                //    Title = Strings.AskAnExpertButtonText,
-                //    Data = new ResponseCardPayload
-                //    {
-                //        MsTeams = new CardAction
-                //        {
-                //            Type = ActionTypes.MessageBack,
-                //            DisplayText = Strings.AskAnExpertDisplayText,
-                //            Text = Constants.AskAnExpert,
-                //        },
-                //        UserQuestion = userQuestion,
-                //        KnowledgeBaseAnswer = answer,
-                //    },
-                //},
+                new AdaptiveSubmitAction
+                {
+                    Title = Strings.AskAnExpertButtonText,
+                    Data = new ResponseCardPayload
+                    {
+                        MsTeams = new CardAction
+                        {
+                            Type = ActionTypes.MessageBack,
+                            DisplayText = Strings.AskAnExpertDisplayText,
+                            Text = Constants.AskAnExpert,
+                        },
+                        UserQuestion = userQuestion,
+                        KnowledgeBaseAnswer = answer,
+                    },
+                },
 
                 // Adds the "Share feedback" button.
                 new AdaptiveSubmitAction

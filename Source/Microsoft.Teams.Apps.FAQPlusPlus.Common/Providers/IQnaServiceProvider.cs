@@ -44,10 +44,11 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Common.Providers
         /// </summary>
         /// <param name="question">Question text.</param>
         /// <param name="isTestKnowledgeBase">Prod or test.</param>
+        /// <param name="userId">User ID.</param>
         /// <param name="previousQnAId">Id of previous question.</param>
         /// <param name="previousUserQuery">Previous question information.</param>
         /// <returns>QnaSearchResult object as response.</returns>
-        Task<QnASearchResultList> GenerateAnswerAsync(string question, bool isTestKnowledgeBase, string previousQnAId = null, string previousUserQuery = null);
+        Task<QnASearchResultList> GenerateAnswerAsync(string question, bool isTestKnowledgeBase, string userId = null, string previousQnAId = null, string previousUserQuery = null);
 
         /// <summary>
         /// This method is used to update Qna pair in Kb.

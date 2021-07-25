@@ -232,6 +232,48 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
             }
         }
 
+        //protected override async Task OnInstallationUpdateAddAsync(ITurnContext<IInstallationUpdateActivity> turnContext, CancellationToken cancellationToken)
+        //{
+        //    this.logger.LogInformation("Received OnInstallationUpdateAddAsync");
+        //    await base.OnInstallationUpdateAddAsync(turnContext, cancellationToken);
+        //}
+
+        //protected override async Task OnInstallationUpdateActivityAsync(ITurnContext<IInstallationUpdateActivity> turnContext, 
+        //    CancellationToken cancellationToken)
+        //{
+        //    var activity = turnContext.Activity;
+        //    if (string.Equals(activity.Action, "Add", StringComparison.InvariantCultureIgnoreCase))
+        //    {
+        //        // TO:DO Installation workflow
+        //        await turnContext.SendActivityAsync(MessageFactory.Text($"Hello and welcome from !"), cancellationToken);
+        //        //var welcomeText = await this.configurationProvider.GetSavedEntityDetailAsync(ConfigurationEntityTypes.WelcomeMessageText).ConfigureAwait(false);
+        //        //var userWelcomeCardAttachment = WelcomeCard.GetCard(welcomeText);
+        //        //await turnContext.SendActivityAsync(MessageFactory.Attachment(userWelcomeCardAttachment)).ConfigureAwait(false);
+        //    }
+        //    else
+        //    { // TO:DO Uninstallation workflow
+        //    }
+        //    return;
+        //}
+
+        //protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
+        //{
+        //this.logger.LogInformation("Received OnMembersAddedAsync");
+        //foreach (var member in membersAdded)
+        //{
+        //    if (member.Id != turnContext.Activity.Recipient.Id)
+        //    {
+        //        await turnContext.SendActivityAsync(MessageFactory.Text($"Hello and welcome!"), cancellationToken);
+        //    }
+        //}
+        //}
+
+        //protected override Task OnTeamsMembersAddedAsync(IList<TeamsChannelAccount> teamsMembersAdded, TeamInfo teamInfo, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
+        //{
+        //    this.logger.LogInformation("Received OnTeamsMembersAddedAsync");
+        //    return base.OnTeamsMembersAddedAsync(teamsMembersAdded, teamInfo, turnContext, cancellationToken);
+        //}
+
         /// <summary>
         /// Invoke when a conversation update activity is received from the channel.
         /// </summary>
@@ -259,9 +301,9 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
 
                 switch (activity.Conversation.ConversationType.ToLower())
                 {
-                    //case ConversationTypePersonal:
-                    //    await this.OnMembersAddedToPersonalChatAsync(activity.MembersAdded, turnContext).ConfigureAwait(false);
-                    //    return;
+                    case ConversationTypePersonal:
+                        await this.OnMembersAddedToPersonalChatAsync(activity.MembersAdded, turnContext).ConfigureAwait(false);
+                        return;
 
                     case ConversationTypeChannel:
                         await this.OnMembersAddedToTeamAsync(activity.MembersAdded, turnContext, cancellationToken).ConfigureAwait(false);
@@ -719,13 +761,14 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
             ITurnContext<IConversationUpdateActivity> turnContext)
         {
             var activity = turnContext.Activity;
-            if (membersAdded.Any(channelAccount => channelAccount.Id == activity.Recipient.Id))
+            if (membersAdded.Any(member => member.Id == activity.Recipient.Id))
             {
                 // User started chat with the bot in personal scope, for the first time.
-                this.logger.LogInformation($"Bot added to 1:1 chat {activity.Conversation.Id}");
+                this.logger.LogInformation($"Bot added to 1:1 chat {activity.Conversation.Id}  for recipient id {activity.Recipient.Id}");
+
                 var welcomeText = await this.configurationProvider.GetSavedEntityDetailAsync(ConfigurationEntityTypes.WelcomeMessageText).ConfigureAwait(false);
                 var userWelcomeCardAttachment = WelcomeCard.GetCard(welcomeText);
-                await turnContext.SendActivityAsync(MessageFactory.Attachment(userWelcomeCardAttachment)).ConfigureAwait(false);
+                await turnContext.SendActivityAsync(MessageFactory.Attachment(userWelcomeCardAttachment));//.ConfigureAwait(false);
             }
         }
 
@@ -1443,23 +1486,21 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
                 queryResult = await this.qnaServiceProvider.GenerateAnswerAsync(
                     question: text,
                     isTestKnowledgeBase: false,
+                    userId: turnContext.Activity.From.AadObjectId,
                     payload.PreviousQuestions?.Last().Id.ToString(),
                     payload.PreviousQuestions?.Last().Questions.First()).ConfigureAwait(false);
 
                 var answer = queryResult.Answers.First();
                 bool isContextOnly = answer.Context?.IsContextOnly ?? false;
 
-                if (isContextOnly && (payload.PreviousQuestions == null))
+                if (answer.Id == -1 || (isContextOnly && payload.PreviousQuestions == null))
                 {
+
                     await turnContext.SendActivityAsync(MessageFactory.Attachment(UnrecognizedInputCard.GetCard(text))).ConfigureAwait(false);
-                }
-                else if (answer.Id != -1)
-                {
-                    await turnContext.SendActivityAsync(MessageFactory.Attachment(ResponseCard.GetCard(queryResult.Answers.First(), text, this.appBaseUri, payload))).ConfigureAwait(false);
                 }
                 else
                 {
-                    await turnContext.SendActivityAsync(MessageFactory.Attachment(UnrecognizedInputCard.GetCard(text))).ConfigureAwait(false);
+                    await turnContext.SendActivityAsync(MessageFactory.Attachment(ResponseCard.GetCard(queryResult.Answers.First(), text, this.appBaseUri, payload))).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
