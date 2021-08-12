@@ -778,7 +778,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
                 text.Equals(Constants.TakeATour, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.logger.LogInformation("Sending user tour card");
-                var userTourCards = TourCarousel.GetUserTourCards(this.appBaseUri);
+                var userTourCards = TourCarousel.GetUserTourCards(this.appBaseUri, message.From.Name);
                 await turnContext.SendActivityAsync(MessageFactory.Carousel(userTourCards)).ConfigureAwait(false);
             }
             else
