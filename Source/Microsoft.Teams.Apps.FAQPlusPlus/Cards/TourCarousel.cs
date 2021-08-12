@@ -32,13 +32,13 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
         /// </summary>
         /// <param name="appBaseUri">The base URI where the app is hosted.</param>
         /// <returns>The cards that comprise the user tour.</returns>
-        public static IEnumerable<Attachment> GetUserTourCards(string appBaseUri)
+        public static IEnumerable<Attachment> GetUserTourCards(string appBaseUri, string userDisplayName)
         {
             return new List<Attachment>()
             {
-                GetCard(Strings.FunctionCardText1, Strings.FunctionCardText2, appBaseUri + "/content/Askaquestion.png"),
-                GetCard(Strings.AskAnExpertTitleText, Strings.AskAnExpertText2, appBaseUri + "/content/Expertinquiry.png"),
-                GetCard(Strings.ShareFeedbackTitleText, Strings.FeedbackText1, appBaseUri + "/content/Sharefeedback.png"),
+                GetCard(Strings.FunctionCardText1, string.Format(Strings.FunctionCardText2, userDisplayName), appBaseUri + "/content/LentaAskaquestion.png"),
+                GetCard(Strings.AskAnExpertTitleText, Strings.AskAnExpertText2, appBaseUri + "/content/LentaExpertinquiry.png"),
+                GetCard(Strings.ShareFeedbackTitleText, Strings.FeedbackText1, appBaseUri + "/content/LentaSharefeedback.png"),
             };
         }
 
