@@ -126,11 +126,11 @@
     <comment>Title of the ask an expert card.</comment>
   </data>
   <data name="AskAnExpertText2" xml:space="preserve">
-    <value>... Если мой ответ вас не устроил, я свяжу вас со специалистом.</value>
+    <value>... Если мой ответ тебя не устроит, я переведу тебя на эксперта.</value>
     <comment>Helps the user in understanding there is an expert team to connect to.</comment>
   </data>
   <data name="FeedbackText1" xml:space="preserve">
-    <value>Расскажите моей команде экспертов, как я справляюсь, чтобы они помогли мне стать лучше.</value>
+    <value>Поделись своим мнением о моей работе, в каком направлении мне развиваться?</value>
     <comment>Text suggests that user is invited to share his feedback on his experience using bot.</comment>
   </data>
   <data name="FunctionCardText1" xml:space="preserve">
@@ -138,7 +138,7 @@
     <comment>Explains what bot does and possible questions.</comment>
   </data>
   <data name="FunctionCardText2" xml:space="preserve">
-    <value>Вы можете задавать вопросы, а я постараюсь на них ответить. Если нужны дополнительные действия, я могу их выполнить...</value>
+    <value>Привет, {0}! Задай мне вопрос о своей работе: где найти документ, оформить больничный, как заказать канцелярию и т.д., я постараюсь найти самый подходящий ответ!</value>
     <comment>Suggests the user to ask question.</comment>
   </data>
   <data name="ShareFeedbackButtonText" xml:space="preserve">
