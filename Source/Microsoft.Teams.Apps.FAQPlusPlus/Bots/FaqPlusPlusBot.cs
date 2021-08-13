@@ -14,7 +14,6 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
     using Microsoft.ApplicationInsights.DataContracts;
     using Microsoft.Azure.CognitiveServices.Knowledge.QnAMaker.Models;
     using Microsoft.Bot.Builder;
-    using Microsoft.Bot.Builder.AI.QnA;
     using Microsoft.Bot.Builder.Teams;
     using Microsoft.Bot.Connector.Authentication;
     using Microsoft.Bot.Schema;
