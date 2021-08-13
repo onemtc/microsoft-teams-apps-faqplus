@@ -90,6 +90,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
         private readonly IKnowledgeBaseSearchService knowledgeBaseSearchService;
         private readonly ILogger<FaqPlusPlusBot> logger;
         private readonly IQnaServiceProvider qnaServiceProvider;
+        private readonly IBotTelemetryClient telemetryClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FaqPlusPlusBot"/> class.
@@ -116,7 +117,8 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
             IMemoryCache memoryCache,
             IKnowledgeBaseSearchService knowledgeBaseSearchService,
             IOptionsMonitor<BotSettings> optionsAccessor,
-            ILogger<FaqPlusPlusBot> logger)
+            ILogger<FaqPlusPlusBot> logger,
+            IBotTelemetryClient telemetryClient)
         {
             this.configurationProvider = configurationProvider;
             this.microsoftAppCredentials = microsoftAppCredentials;
@@ -140,7 +142,7 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
             this.appBaseUri = this.options.AppBaseUri;
             this.knowledgeBaseSearchService = knowledgeBaseSearchService;
 
-
+            this.telemetryClient = telemetryClient;
             //var httpClient = _httpClientFactory.CreateClient();
 
             //var qnaMaker = new QnAMaker(new QnAMakerEndpoint
