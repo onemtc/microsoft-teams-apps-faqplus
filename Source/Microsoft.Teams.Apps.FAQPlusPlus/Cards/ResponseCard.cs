@@ -147,6 +147,15 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
             if (response?.Context.Prompts.Count > 0)
             {
                 List<QnADTO> previousQuestions = BuildListOfPreviousQuestions((int)response.Id, userQuestion, answer, payload);
+                QnADTO lastQuestion = new QnADTO
+                {
+                    Id = response.Id,
+                    Questions = new List<string>()
+                    {
+                        userQuestion,
+                    },
+                    Answer = answer,
+                };
 
                 foreach (var item in response.Context.Prompts)
                 {
