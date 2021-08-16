@@ -37,22 +37,22 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Cards
                         Wrap = true,
                     },
                 },
-                Actions = new List<AdaptiveAction>
-                {
-                    new AdaptiveSubmitAction
-                    {
-                        Title = Strings.TakeATourButtonText,
-                        Data = new TeamsAdaptiveSubmitActionData
-                        {
-                            MsTeams = new CardAction
-                            {
-                              Type = ActionTypes.MessageBack,
-                              DisplayText = Strings.TakeATourButtonText,
-                              Text = Constants.TakeATour,
-                            },
-                        },
-                    },
-                },
+                //Actions = new List<AdaptiveAction>
+                //{
+                //    new AdaptiveSubmitAction
+                //    {
+                //        Title = Strings.TakeATourButtonText,
+                //        Data = new TeamsAdaptiveSubmitActionData
+                //        {
+                //            MsTeams = new CardAction
+                //            {
+                //              Type = ActionTypes.MessageBack,
+                //              DisplayText = Strings.TakeATourButtonText,
+                //              Text = Constants.TakeATour,
+                //            },
+                //        },
+                //    },
+                //},
             };
 
             return new Attachment
