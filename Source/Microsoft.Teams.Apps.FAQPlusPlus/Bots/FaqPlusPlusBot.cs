@@ -1484,12 +1484,15 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus.Bots
                     payload = ((JObject)message.Value).ToObject<ResponseCardPayload>();
                 }
 
+
+                var lastQuestion = payload.PreviousQuestions?.Last().Questions.First();
+
                 queryResult = await this.qnaServiceProvider.GenerateAnswerAsync(
                     question: text,
                     isTestKnowledgeBase: false,
-                    userId: turnContext.Activity.From.AadObjectId,
+                    userId: lastQuestion,
                     payload.PreviousQuestions?.Last().Id.ToString(),
-                    payload.PreviousQuestions?.Last().Questions.First()).ConfigureAwait(false);
+                    lastQuestion).ConfigureAwait(false);
 
                 var answer = queryResult.Answers.First();
                 bool isContextOnly = answer.Context?.IsContextOnly ?? false;

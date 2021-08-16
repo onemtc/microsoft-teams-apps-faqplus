@@ -9,16 +9,16 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.ApplicationInsights.Extensibility;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Localization;
-    using Microsoft.ApplicationInsights.Extensibility;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.CognitiveServices.Knowledge.QnAMaker;
     using Microsoft.Bot.Builder;
-    using Microsoft.Bot.Builder.Integration.AspNet.Core;
     using Microsoft.Bot.Builder.ApplicationInsights;
     using Microsoft.Bot.Builder.Integration.ApplicationInsights.Core;
+    using Microsoft.Bot.Builder.Integration.AspNet.Core;
     using Microsoft.Bot.Connector.Authentication;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Configuration;
@@ -75,7 +75,6 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus
         /// <param name="services"> Service Collection Interface.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry();
             services.Configure<KnowledgeBaseSettings>(knowledgeBaseSettings =>
             {
                 knowledgeBaseSettings.SearchServiceName = this.Configuration["SearchServiceName"];
@@ -107,7 +106,12 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus
             services.AddSingleton<IBotFrameworkHttpAdapter, BotFrameworkHttpAdapter>();
             services.AddSingleton(new MicrosoftAppCredentials(this.Configuration["MicrosoftAppId"], this.Configuration["MicrosoftAppPassword"]));
 
-            IQnAMakerClient qnaMakerClient = new QnAMakerClient(new ApiKeyServiceClientCredentials(this.Configuration["QnAMakerSubscriptionKey"])) { Endpoint = this.Configuration["QnAMakerApiEndpointUrl"] };
+            IQnAMakerClient qnaMakerClient = new QnAMakerClient(
+                new ApiKeyServiceClientCredentials(this.Configuration["QnAMakerSubscriptionKey"]))
+            {
+                Endpoint = this.Configuration["QnAMakerApiEndpointUrl"],
+            };
+
             string endpointKey = Task.Run(() => qnaMakerClient.EndpointKeys.GetKeysAsync()).Result.PrimaryEndpointKey;
 
             services.AddSingleton<IQnaServiceProvider>((provider) => new QnaServiceProvider(
@@ -122,12 +126,6 @@ namespace Microsoft.Teams.Apps.FAQPlusPlus
             services.AddSingleton<IMemoryCache, MemoryCache>();
             services.AddTransient(sp => (BotFrameworkAdapter)sp.GetRequiredService<IBotFrameworkHttpAdapter>());
             services.AddTransient<IBot, FaqPlusPlusBot>();
-
-            // Create the telemetry middleware(used by the telemetry initializer) to track conversation events
-            //services.AddSingleton<TelemetryLoggerMiddleware>();
-            
-            // Create the Bot Framework Adapter with error handling enabled.
-            //services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
 
             // Add Application Insights services into service collection
             services.AddApplicationInsightsTelemetry();
